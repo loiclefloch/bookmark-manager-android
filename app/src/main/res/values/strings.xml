@@ -15,4 +15,8 @@
     <string name="preview">Preview</string>
     <string name="edit">Edit</string>
     <string name="cancel">Cancel</string>
+    <string name="unknown_error">Unknown error</string>
+    <string name="error">Error</string>
+    <string name="error_http">Please verify your network connection</string>
+    <string name="activity_bm_view_title">Bookmark</string>
 </resources>

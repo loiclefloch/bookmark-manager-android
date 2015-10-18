@@ -25,6 +25,10 @@
             android:name=".view.bm_form.BmFormView"
             android:windowSoftInputMode="adjustPan"/>
 
+        <activity
+            android:name=".view.bm_view.BmViewView"
+            android:windowSoftInputMode="adjustPan"/>
+
     </application>
 
 </manifest>

@@ -20,7 +20,7 @@ public class MainActivity extends BaseAppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initView(R.layout.activity__main);
+        initView(R.layout.activity__main, R.id.nav_view);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

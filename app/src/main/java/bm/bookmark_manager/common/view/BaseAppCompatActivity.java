@@ -4,12 +4,18 @@ import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import bm.bookmark_manager.R;
+import bm.bookmark_manager.common.tools.ViewTools;
+import butterknife.ButterKnife;
 
-public class BaseAppCompatActivity extends AppCompatActivity {
+public class BaseAppCompatActivity extends AppCompatActivity
+        implements ViewInterface {
 
-    ProgressDialog progressDialog;
+    ProgressDialog loadingDialog;
+
+    View parentLayout;
 
     protected android.support.v7.app.ActionBar toolbar;
 
@@ -20,10 +26,10 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     }
 
     private void initProgressDialog() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage(getText(R.string.loading));
-        progressDialog.setCancelable(false);
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        loadingDialog.setMessage(getText(R.string.loading));
+        loadingDialog.setCancelable(false);
     }
 
     /**
@@ -33,7 +39,7 @@ public class BaseAppCompatActivity extends AppCompatActivity {
     protected void initToolbar(String title) {
         toolbar = getSupportActionBar();
         if (toolbar != null) {
-            toolbar.setTitle(title);
+            setToolbarTitle(title);
         }
 
         if (getSupportActionBar() != null) {
@@ -62,8 +68,39 @@ public class BaseAppCompatActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    protected void initView(int id) {
+    protected void initView(int id, int parentLayoutId) {
         setContentView(id);
+        this.parentLayout = findViewById(parentLayoutId);
+        ButterKnife.bind(this);
+    }
+
+    // --- View interface
+
+    @Override
+    public void displayError(String message) {
+        if (parentLayout != null) {
+            ViewTools.displayError(parentLayout, message);
+        }
+    }
+
+    @Override
+    public void displayToast(String title) {
+        ViewTools.displayToast(this, title);
+    }
+
+    @Override
+    public void showLoading() {
+        loadingDialog.show();
+    }
+
+    @Override
+    public void hideLoading() {
+        loadingDialog.hide();
+    }
+
+    @Override
+    public void setToolbarTitle(String title) {
+        toolbar.setTitle(title);
     }
 
 }

@@ -24,17 +24,28 @@ public class BmFormView extends BaseAppCompatActivity implements BmFormViewInter
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new BmFormPresenter(this, BmFormView.this);
-
-        initView(R.layout.activity__bm_add);
+        initView(R.layout.activity__bm_add, R.id.bm_add__);
         initToolbar(getString(R.string.activity_bm_add_title));
 
         presenter = new BmFormPresenter(this, this);
         presenter.handleIntent(getIntent());
     }
 
-    @OnClick(R.id.bm_add__title_edit_text)
+    @OnClick(R.id.bm_add__validate_button)
     void validateOnClick(View v) {
-        presenter.createNewBookmark(titleEditText.getText().toString(), urlEditText.getText().toString());
+        presenter.saveBookmark(titleEditText.getText().toString(), urlEditText.getText().toString());
     }
+
+    // --- BmFormViewInterface
+
+    @Override
+    public void setTitle(String title) {
+        titleEditText.setText(title);
+    }
+
+    @Override
+    public void setUrl(String url) {
+        urlEditText.setText(url);
+    }
+
 }

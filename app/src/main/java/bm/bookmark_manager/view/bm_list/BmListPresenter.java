@@ -39,6 +39,11 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
 
     }
 
+    @Override
+    public void openBookmark(Bookmark bookmark) {
+        wireframe.presentBookmarkInterface(context, bookmark);
+    }
+
     public void load() {
         refresh();
     }

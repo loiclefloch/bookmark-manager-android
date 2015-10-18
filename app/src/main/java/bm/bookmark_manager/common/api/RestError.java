@@ -23,7 +23,7 @@ public class RestError
      * The api error message
      */
     @SerializedName("message")
-    private String strMessage = "";
+    private String message = "";
 
     /**
      * The retrofit error
@@ -50,18 +50,18 @@ public class RestError
     @Override
     public String toString() {
         return "ResError\n"
-                + "[" + code + "] " + strMessage + "\n"
+                + "[" + code + "] " + message + "\n"
                 + error;
     }
 
     // -- getters and setters
 
-    public String getStrMessage() {
-        return strMessage;
+    public String getMessage() {
+        return message;
     }
 
-    public void setStrMessage(String strMessage) {
-        this.strMessage = strMessage;
+    public void setMessage(String strMessage) {
+        this.message = strMessage;
     }
 
     public Integer getCode() {

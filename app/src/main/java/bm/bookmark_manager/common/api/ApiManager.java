@@ -7,6 +7,7 @@ import bm.bookmark_manager.common.Constants;
 import bm.bookmark_manager.common.model.Bookmark;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
@@ -60,14 +61,24 @@ public class ApiManager {
     // ----------- Services.
 
     public interface BookmarkService {
+        // -- The api errors code
+        int BOOKMARK_URL_EMPTY = 4001;
+        int BOOKMARK_ALREADY_EXISTS = 4002;
+        int INVALID_URL = 4002;
+        int WEBSITE_NO_TITLE = 4003;
+        int MONGODB_ERROR = 5001; // Failed to save the bookmark
+        int BOOKMARK_NOT_FOUND = 1002;
+
+        // -- The routes
+
         @GET("/bookmark")
         void get(RestCallback<List<Bookmark>> callback);
 
         @POST("/bookmark")
-        void post(Bookmark bookmark, RestCallback<Bookmark> callback);
+        void post(@Body Bookmark bookmark, RestCallback<Bookmark> callback);
 
         @PUT("/bookmark")
-        void put(Bookmark bookmark, RestCallback<Bookmark> callback);
+        void put(@Body Bookmark bookmark, RestCallback<Bookmark> callback);
     }
 
 }

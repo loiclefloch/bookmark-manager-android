@@ -7,4 +7,5 @@ interface BmListModuleInterface {
     void openBookmarkLink(final Bookmark bookmark);
     void previewBookmark(final Bookmark bookmark);
     void editBookmark(final Bookmark bookmark);
+    void openBookmark(final Bookmark bookmark);
 }

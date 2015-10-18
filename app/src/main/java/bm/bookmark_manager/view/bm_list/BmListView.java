@@ -83,12 +83,7 @@ public class BmListView extends BaseFragment
 
     @Override
     public void showLoadingErrorMessage() {
-
-        if (getView() != null) {
-            Snackbar.make(getView(), getString(R.string.error_when_loading_bookmarks), Snackbar.LENGTH_LONG)
-                    .setAction("Action", null)
-                    .show();
-        }
+        displayError(getString(R.string.error_when_loading_bookmarks));
     }
 
     void showBookmarkPopupMenu(final Bookmark bookmark) {
@@ -132,8 +127,7 @@ public class BmListView extends BaseFragment
     BookmarkRenderer.OnBookmarkAction onBookmarkAction = new BookmarkRenderer.OnBookmarkAction() {
         @Override
         public void onBookmarkClicked(Bookmark bookmark) {
-
-//            showBookmarkPopupMenu(bookmark);
+            presenter.openBookmark(bookmark);
         }
 
         @Override
@@ -141,5 +135,4 @@ public class BmListView extends BaseFragment
             showBookmarkPopupMenu(bookmark);
         }
     };
-
 }
