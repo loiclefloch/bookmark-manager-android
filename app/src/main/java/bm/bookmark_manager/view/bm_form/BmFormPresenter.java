@@ -35,6 +35,13 @@ public class BmFormPresenter extends Presenter<BmFormViewInterface, BmFormWirefr
         if (this.bookmark == null) {
             this.bookmark = new Bookmark();
         }
+
+        refreshView();
+    }
+
+    private void refreshView() {
+        view.setTitle(bookmark.getTitle());
+        view.setUrl(bookmark.getUrl());
     }
 
     // --- BmFormInteractor

@@ -68,7 +68,7 @@ public class BmListView extends BaseFragment
         searchView.setOnSearchClickListener(searchClickListener);
 
 
-        // -- Setup refresh
+        // -- Setup refreshView
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -77,6 +77,14 @@ public class BmListView extends BaseFragment
         });
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        hideKeyboard();
+        searchView.clearFocus(); // remove automatic keyboard focus
     }
 
     @Override
@@ -127,9 +135,9 @@ public class BmListView extends BaseFragment
 
     void showBookmarkPopupMenu(final Bookmark bookmark) {
 
-        final CharSequence menu[] = new CharSequence[] {
+        final CharSequence menu[] = new CharSequence[]{
                 getString(R.string.open_link),
-                getString(R.string.preview),
+                getString(R.string.preview).concat(" ").concat(bookmark.isReadable() ? "" : getString(R.string.bookmark_readable_content_empty_menu_indication)),
                 getString(R.string.edit),
                 getString(R.string.tags),
                 getString(R.string.delete)
@@ -142,18 +150,24 @@ public class BmListView extends BaseFragment
             public void onClick(DialogInterface dialog, int which) {
 
                 switch (which) {
-                    case 0:
+                    case 0: // open_link
                         presenter.openBookmarkLink(bookmark);
                         break;
-                    case 1:
+                    case 1: // preview
                         presenter.previewBookmark(bookmark);
                         break;
-                    case 2:
+                    case 2: // edit
                         presenter.editBookmark(bookmark);
+                        break;
+                    case 3: // tags
+                        break;
+                    case 4: // delete
+                        break;
                 }
 
             }
         });
+
         builder.show();
 
     }

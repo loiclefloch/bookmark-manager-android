@@ -19,6 +19,18 @@ public class BmViewPresenter
         initPresenter(context, view, new BmViewWireframe(), new BmViewInteractor());
     }
 
+    public void refreshView() {
+        view.setToolbarTitle(bookmark.getMainTitle());
+
+        view.setTitle(bookmark.getMainTitle());
+        view.setDescription(bookmark.getDescription());
+        view.setNotes(bookmark.getNotes());
+        view.setTagList(bookmark.getTags());
+    }
+
+    // -- BmViewModuleInterface
+
+    @Override
     public void handleIntent(Intent intent) {
         assert intent != null;
 
@@ -27,21 +39,21 @@ public class BmViewPresenter
             view.finish();
         }
 
-        refresh();
+        refreshView();
     }
-
-    public void refresh() {
-        view.setToolbarTitle(bookmark.getTitle());
-
-        view.setTitle(bookmark.getTitle());
-        view.setDescription(bookmark.getDescription());
-        view.setNotes(bookmark.getNotes());
-    }
-
-    // -- BmViewModuleInterface
 
     @Override
     public void openBookmarkLink() {
         RootWireframe.openLinkInBrowser(context, bookmark.getUrl());
+    }
+
+    @Override
+    public void editBookmark() {
+        wireframe.presentEditInterface(context, bookmark);
+    }
+
+    @Override
+    public void previewBookmark() {
+        wireframe.presentPreviewInterface(context, bookmark);
     }
 }

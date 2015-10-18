@@ -34,7 +34,16 @@ public class MainActivity extends BaseAppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Open home (bookmark list)
         openFragment(new BmListView(), "Home");
+        navigationView.getMenu().getItem(0).setChecked(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        hideKeyboard();
     }
 
     @Override

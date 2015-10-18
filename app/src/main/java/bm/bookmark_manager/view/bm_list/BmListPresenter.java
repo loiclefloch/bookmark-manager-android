@@ -35,12 +35,14 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
 
     @Override
     public void previewBookmark(final Bookmark bookmark) {
-
+        if (bookmark.isReadable()) {
+            wireframe.presentPreviewInterface(context, bookmark);
+        }
     }
 
     @Override
     public void editBookmark(final Bookmark bookmark) {
-
+        wireframe.presentEditInterface(context, bookmark);
     }
 
     @Override
@@ -101,6 +103,10 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
     public void update() {
         List<Bookmark> bookmarks = new ArrayList<>();
 
+        if (null == this.bookmarksList) {
+            refresh();
+            return ;
+        }
         for (Bookmark bookmark : this.bookmarksList) {
             if (searchQuery.length() > 0) {
                 if (bookmark.canBeFilter(searchQuery)) {

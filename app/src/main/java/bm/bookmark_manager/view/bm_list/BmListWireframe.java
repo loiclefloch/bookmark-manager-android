@@ -6,6 +6,8 @@ import android.content.Intent;
 import bm.bookmark_manager.common.model.Bookmark;
 import bm.bookmark_manager.view.bm_form.BmFormPresenter;
 import bm.bookmark_manager.view.bm_form.BmFormView;
+import bm.bookmark_manager.view.bm_preview.BmPreviewPresenter;
+import bm.bookmark_manager.view.bm_preview.BmPreviewView;
 import bm.bookmark_manager.view.bm_view.BmViewPresenter;
 import bm.bookmark_manager.view.bm_view.BmViewView;
 
@@ -32,6 +34,14 @@ public class BmListWireframe {
         Intent intent = new Intent(context, BmViewView.class);
 
         intent.putExtra(BmViewPresenter.EXTRA_BOOKMARK, bookmark);
+
+        context.startActivity(intent);
+    }
+
+    void presentPreviewInterface(Context context, Bookmark bookmark) {
+        Intent intent = new Intent(context, BmPreviewView.class);
+
+        intent.putExtra(BmPreviewPresenter.EXTRA_BOOKMARK, bookmark);
 
         context.startActivity(intent);
     }

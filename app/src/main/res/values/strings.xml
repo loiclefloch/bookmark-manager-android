@@ -21,4 +21,7 @@
     <string name="activity_bm_view_title">Bookmark</string>
     <string name="delete">Delete</string>
     <string name="tags">Tags</string>
+    <string name="notes">Notes</string>
+    <string name="activity_preview_view_title">Preview</string>
+    <string name="bookmark_readable_content_empty_menu_indication">(empty)</string>
 </resources>

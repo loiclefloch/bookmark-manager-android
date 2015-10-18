@@ -1,6 +1,12 @@
 package bm.bookmark_manager.common.model;
 
+import android.text.TextUtils;
+
 import com.google.gson.annotations.SerializedName;
+import com.orhanobut.logger.Logger;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.List;
 
@@ -31,6 +37,55 @@ public class Bookmark extends Model {
         return searchQuery == null
                 || (name != null && name.toUpperCase().contains(searchQuery.toUpperCase()))
                 || (title != null && title.toUpperCase().contains(searchQuery.toUpperCase()));
+    }
+
+    /**
+     * If the user set a name, we use it, otherwise, we use the page title.
+     *
+     * @return the name of the bookmark
+     */
+    public String getMainTitle() {
+        if (!TextUtils.isEmpty(name)) {
+            return name;
+        }
+        return title;
+    }
+
+    /**
+     *
+     * @return true if there is a readable content
+     */
+    public boolean isReadable() {
+        Document doc = Jsoup.parse(getReadableContentHtml());
+        String textOnly = doc.body().text();
+
+        Logger.i(textOnly);
+
+        return textOnly.length() > title.length() + 100;
+    }
+
+    public String getReadableContentHtml() {
+        String css = "body { color: rgb(51, 51, 51); width: 96%; }\n" +
+                "h1, h2, h3, h4, h5, h6 { font-family: \"RobotoDraft\", \"Roboto\", \"Helvetica Neue\", Helvetica, Arial, sans-serif }\n" +
+                "h3 { font-size: 24px }\n" +
+                "h4 { font-size: 18px }\n" +
+                "a { color: #009688 } a:hover { color: #009688; }\n" +
+                "img { max-width: 100% }\n" +
+                "pre { " +
+                "overflow: auto; font-family: Menlo,Monaco,Consolas,\"Courier New\",monospace;" +
+                "display:block;padding:9.5px;margin:0 0 10px;font-size:13px;line-height:1.42857;word-break:break-all;word-wrap:break-word;color:#333;background-color:#f5f5f5;border:1px solid #ccc;border-radius:4px" +
+                "}\n" +
+                "p { margin: 0 0 10px }\n" +
+                ".title { text-align: center; line-height: 1.42857; font-weight: 300; font-family: \"Helvetica Neue\", Helvetica, Arial, sans-serif }\n";
+
+        String head = "<html><head>" +
+                "<style>" + css + "</style>" +
+                "</head><body>" +
+                "<h3 class=\"title\">" + getTitle() + "</h3><br />";
+
+        String footer = "</body></html>";
+
+        return head + readableContent + footer;
     }
 
     // -- Getters and setters

@@ -52,6 +52,8 @@ dependencies {
     // https://github.com/pedrovgs/Renderers
     compile 'com.github.pedrovgs:renderers:2.0.3'
 
+    compile 'org.jsoup:jsoup:1.6.1'
+
     // Network libraries
     compile 'com.squareup.retrofit:retrofit:1.9.0'
     compile 'com.squareup.okhttp:okhttp:2.4.0'
