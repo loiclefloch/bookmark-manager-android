@@ -1,8 +1,11 @@
 package bm.bookmark_manager.common.view;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import bm.bookmark_manager.R;
 import bm.bookmark_manager.common.tools.ViewTools;
@@ -52,6 +55,16 @@ public class BaseFragment extends Fragment implements ViewInterface {
     @Override
     public void hideLoading() {
         loadingDialog.hide();
+    }
+
+    @Override
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        View currentFocus = getActivity().getCurrentFocus();
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 
 

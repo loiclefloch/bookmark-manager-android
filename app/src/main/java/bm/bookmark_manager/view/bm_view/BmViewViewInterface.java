@@ -6,5 +6,6 @@ public interface BmViewViewInterface extends ViewInterface {
     void finish();
 
     void setTitle(String title);
-    void setUrl(String url);
+    void setDescription(String description);
+    void setNotes(String notes);
 }

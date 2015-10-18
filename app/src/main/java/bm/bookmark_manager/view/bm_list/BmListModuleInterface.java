@@ -8,4 +8,7 @@ interface BmListModuleInterface {
     void previewBookmark(final Bookmark bookmark);
     void editBookmark(final Bookmark bookmark);
     void openBookmark(final Bookmark bookmark);
+
+    void searchSubmit(String query);
+    void searchChange(String query);
 }

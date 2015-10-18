@@ -1,10 +1,12 @@
 package bm.bookmark_manager.common.view;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import bm.bookmark_manager.R;
 import bm.bookmark_manager.common.tools.ViewTools;
@@ -96,6 +98,16 @@ public class BaseAppCompatActivity extends AppCompatActivity
     @Override
     public void hideLoading() {
         loadingDialog.hide();
+    }
+
+    @Override
+    public void hideKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(
+                Context.INPUT_METHOD_SERVICE);
+        View currentFocus = getCurrentFocus();
+        if (currentFocus != null) {
+            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        }
     }
 
     @Override

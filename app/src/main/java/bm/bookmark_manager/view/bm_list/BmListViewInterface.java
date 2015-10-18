@@ -10,4 +10,7 @@ public interface BmListViewInterface extends ViewInterface {
     void showNoContentMessage();
     void showUpcomingDisplayData();
     void showLoadingErrorMessage();
+
+    void showListRefreshDialog();
+    void hideListRefreshDialog();
 }

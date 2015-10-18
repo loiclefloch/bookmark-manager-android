@@ -27,6 +27,11 @@ public class Bookmark extends Model {
         return "Bookmark";
     }
 
+    public boolean canBeFilter(String searchQuery) {
+        return searchQuery == null
+                || (name != null && name.toUpperCase().contains(searchQuery.toUpperCase()))
+                || (title != null && title.toUpperCase().contains(searchQuery.toUpperCase()));
+    }
 
     // -- Getters and setters
 
@@ -117,4 +122,5 @@ public class Bookmark extends Model {
     public void setReadableContent(String readableContent) {
         this.readableContent = readableContent;
     }
+
 }

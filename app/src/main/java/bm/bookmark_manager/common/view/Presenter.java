@@ -32,4 +32,6 @@ public abstract class Presenter<V, W, I> {
         }
         return context.getString(R.string.unknown_error);
     }
+
+
 }

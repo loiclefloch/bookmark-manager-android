@@ -1,6 +1,7 @@
 package bm.bookmark_manager.view.bm_view;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import bm.bookmark_manager.R;
@@ -16,8 +17,10 @@ public class BmViewView extends BaseAppCompatActivity
 
     @Bind(R.id.bm_view__title)
     TextView titleTextView;
-    @Bind(R.id.bm_view__url)
-    TextView urlTextView;
+    @Bind(R.id.bm_view__description)
+    TextView descriptionTextView;
+    @Bind(R.id.bm_view__notes)
+    TextView notesTextView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,14 +33,23 @@ public class BmViewView extends BaseAppCompatActivity
         presenter.handleIntent(getIntent());
     }
 
+//    @OnClick(R.id.bm_view__url)
+    void openLink(View v) {
+        presenter.openBookmarkLink();
+    }
+
     // --- BmViewViewInterface
 
     public void setTitle(String title) {
         titleTextView.setText(title);
     }
 
-    public void setUrl(String url) {
-        urlTextView.setText(url);
+    public void setDescription(String url) {
+        descriptionTextView.setText(url);
+    }
+
+    public void setNotes(String url) {
+        notesTextView.setText(url);
     }
 }
 

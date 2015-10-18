@@ -4,11 +4,13 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.pedrogomez.renderers.AdapteeCollection;
 import com.pedrogomez.renderers.ListAdapteeCollection;
@@ -29,11 +31,16 @@ public class BmListView extends BaseFragment
         implements BmListViewInterface {
 
     BmListPresenter presenter;
+    RendererAdapter<Bookmark> adapter;
+
+    // -- views
 
     @Bind(R.id.bm_list__list_view)
     ListView listView;
-
-    RendererAdapter<Bookmark> adapter;
+    @Bind(R.id.bm_list__search_view)
+    SearchView searchView;
+    @Bind(R.id.bm_list__swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Nullable
     @Override
@@ -56,7 +63,27 @@ public class BmListView extends BaseFragment
 
         presenter.load();
 
+        // -- Setup search view
+        searchView.setOnQueryTextListener(searchOnQueryTextListener);
+        searchView.setOnSearchClickListener(searchClickListener);
+
+
+        // -- Setup refresh
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                presenter.refresh();
+            }
+        });
+
         return rootView;
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        hideKeyboard();
     }
 
     // --- BmListViewInterface
@@ -86,12 +113,26 @@ public class BmListView extends BaseFragment
         displayError(getString(R.string.error_when_loading_bookmarks));
     }
 
+    @Override
+    public void showListRefreshDialog() {
+        swipeRefreshLayout.setRefreshing(true);
+    }
+
+    @Override
+    public void hideListRefreshDialog() {
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    // -- Display bookmark menu (at long click)
+
     void showBookmarkPopupMenu(final Bookmark bookmark) {
 
         final CharSequence menu[] = new CharSequence[] {
                 getString(R.string.open_link),
                 getString(R.string.preview),
-                getString(R.string.edit)
+                getString(R.string.edit),
+                getString(R.string.tags),
+                getString(R.string.delete)
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -116,6 +157,36 @@ public class BmListView extends BaseFragment
         builder.show();
 
     }
+
+    // -- Search listeners
+
+    private final SearchView.OnQueryTextListener searchOnQueryTextListener = new SearchView.OnQueryTextListener() {
+
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            presenter.searchSubmit(query);
+            return true;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            presenter.searchChange(newText);
+            return false;
+        }
+    };
+
+    /**
+     * Call when the user submit the search input
+     */
+    private final View.OnClickListener searchClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (searchView.getQuery().length() == 0) {
+                presenter.searchChange("");
+                presenter.refresh();
+            }
+        }
+    };
 
     // --- Events
 

@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import bm.bookmark_manager.common.model.Bookmark;
 import bm.bookmark_manager.common.view.Presenter;
+import bm.bookmark_manager.common.view.RootWireframe;
 
 public class BmViewPresenter
         extends Presenter<BmViewViewInterface, BmViewWireframe, BmViewInteractor>
@@ -31,7 +32,16 @@ public class BmViewPresenter
 
     public void refresh() {
         view.setToolbarTitle(bookmark.getTitle());
+
         view.setTitle(bookmark.getTitle());
-        view.setUrl(bookmark.getUrl());
+        view.setDescription(bookmark.getDescription());
+        view.setNotes(bookmark.getNotes());
+    }
+
+    // -- BmViewModuleInterface
+
+    @Override
+    public void openBookmarkLink() {
+        RootWireframe.openLinkInBrowser(context, bookmark.getUrl());
     }
 }

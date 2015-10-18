@@ -19,4 +19,6 @@
     <string name="error">Error</string>
     <string name="error_http">Please verify your network connection</string>
     <string name="activity_bm_view_title">Bookmark</string>
+    <string name="delete">Delete</string>
+    <string name="tags">Tags</string>
 </resources>

@@ -9,4 +9,6 @@ public interface ViewInterface {
 
     void showLoading();
     void hideLoading();
+
+    void hideKeyboard();
 }
