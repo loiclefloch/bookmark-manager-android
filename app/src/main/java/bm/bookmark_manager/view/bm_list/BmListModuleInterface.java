@@ -11,4 +11,7 @@ interface BmListModuleInterface {
 
     void searchSubmit(String query);
     void searchChange(String query);
+
+    void filterByName();
+    void filterByDate();
 }

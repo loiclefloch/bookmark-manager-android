@@ -8,9 +8,13 @@ import com.orhanobut.logger.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.Date;
 import java.util.List;
 
-public class Bookmark extends Model {
+import bm.bookmark_manager.common.api.ApiTools;
+import bm.bookmark_manager.common.tools.search.Search;
+
+public class Bookmark extends Model implements Search.Sortable {
 
     @SerializedName("_id")
     private String id;
@@ -33,10 +37,26 @@ public class Bookmark extends Model {
         return "Bookmark";
     }
 
-    public boolean canBeFilter(String searchQuery) {
-        return searchQuery == null
-                || (name != null && name.toUpperCase().contains(searchQuery.toUpperCase()))
-                || (title != null && title.toUpperCase().contains(searchQuery.toUpperCase()));
+    // -- Sortable
+
+    @Override
+    public String fieldToSortByName() {
+        if (name != null) {
+            return name;
+        }
+        return title;
+    }
+
+    @Override
+    public Date fieldToSortByDate() {
+        return ApiTools.getDateWithString(updatedAt);
+    }
+
+    @Override
+    public boolean onQuery(String query) {
+        return query == null
+                || (name != null && name.toUpperCase().contains(query.toUpperCase()))
+                || (title != null && title.toUpperCase().contains(query.toUpperCase()));
     }
 
     /**

@@ -13,4 +13,17 @@ public interface BmListViewInterface extends ViewInterface {
 
     void showListRefreshDialog();
     void hideListRefreshDialog();
+
+
+    /**
+     * Set the current search filter apply
+     * @param filter
+     */
+    void setCurrentFilter(int filter);
+
+    /**
+     * Set the current search order apply
+     * @param order
+     */
+    void setCurrentOrder(int order);
 }

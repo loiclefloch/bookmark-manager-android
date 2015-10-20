@@ -26,4 +26,8 @@
     <string name="bookmark_readable_content_empty_menu_indication">(empty)</string>
     <string name="activity_tag_list_title">Tags</string>
     <string name="error_when_loading_tags">Error when loading tags</string>
+    <string name="filter">filter</string>
+    <string name="filter_by_name">By name</string>
+    <string name="filter_by_date">By date</string>
+    <string name="sort">sort</string>
 </resources>

@@ -20,9 +20,10 @@ import java.util.List;
 
 import bm.bookmark_manager.R;
 import bm.bookmark_manager.common.model.Bookmark;
-import bm.bookmark_manager.common.view.BaseFragment;
 import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRenderer;
 import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRendererBuilder;
+import bm.bookmark_manager.common.tools.search.Search;
+import bm.bookmark_manager.common.view.BaseFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -41,6 +42,11 @@ public class BmListView extends BaseFragment
     SearchView searchView;
     @Bind(R.id.bm_list__swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+
+    // --
+
+    private int order;
+    private int currentFilter;
 
     @Nullable
     @Override
@@ -171,6 +177,34 @@ public class BmListView extends BaseFragment
         builder.show();
     }
 
+    // -- Display filter menu
+    void showFilterMenu() {
+
+        final CharSequence menu[] = new CharSequence[]{
+                getString(R.string.filter_by_name).concat(currentFilter == Search.Filter.NAME ? " X" : ""),
+                getString(R.string.filter_by_date).concat(currentFilter == Search.Filter.DATE ? " X" : "")
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setItems(menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which) {
+                    case 0: // filter by name
+                        presenter.filterByName();
+                        break;
+                    case 1: // filter by date
+                        presenter.filterByDate();
+                        break;
+                }
+
+            }
+        });
+
+        builder.show();
+    }
+
     // -- Search listeners
 
     private final SearchView.OnQueryTextListener searchOnQueryTextListener = new SearchView.OnQueryTextListener() {
@@ -219,4 +253,19 @@ public class BmListView extends BaseFragment
             showBookmarkPopupMenu(bookmark);
         }
     };
+
+    @OnClick(R.id.bm_list__filter_btn)
+    void onFilterBtm(View v) {
+        showFilterMenu();
+    }
+
+    @Override
+    public void setCurrentFilter(int filter) {
+        this.currentFilter = filter;
+    }
+
+    @Override
+    public void setCurrentOrder(int order) {
+        this.order = order;
+    }
 }

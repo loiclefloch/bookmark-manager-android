@@ -24,4 +24,7 @@ public class Tools {
         return (a == null) ? (b == null) : a.equals(b);
     }
 
+    public static Boolean checkBit(long data, long bit) {
+        return (data & bit) == bit;
+    }
 }

@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import bm.bookmark_manager.common.api.RestCallback;
 import bm.bookmark_manager.common.api.RestError;
 import bm.bookmark_manager.common.model.Bookmark;
+import bm.bookmark_manager.common.tools.search.Search;
 import bm.bookmark_manager.common.view.Presenter;
 import bm.bookmark_manager.common.view.RootWireframe;
 
@@ -17,7 +17,7 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
         implements BmListModuleInterface {
 
     List<Bookmark> bookmarksList;
-    String searchQuery = "";
+    Search search = new Search();
 
     BmListPresenter(BmListViewInterface view, Context context) {
         initPresenter(context, view, new BmListWireframe(), new BmListInteractor());
@@ -52,17 +52,34 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
 
     @Override
     public void searchSubmit(String query) {
-        searchQuery = query;
+        search.setQuery(query);
         view.hideKeyboard();
         update();
     }
 
+
+
     @Override
     public void searchChange(String query) {
-        searchQuery = query;
+        search.setQuery(query);
         update();
     }
 
+    @Override
+    public void filterByName() {
+        changeSearchType(Search.Filter.NAME);
+    }
+
+    @Override
+    public void filterByDate() {
+        changeSearchType(Search.Filter.DATE);
+    }
+
+    private void changeSearchType(int type) {
+        search.setFilter(type);
+        view.setCurrentFilter(type);
+        update();
+    }
 
     // -- Search
 
@@ -103,22 +120,13 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
     }
 
     public void update() {
-        List<Bookmark> bookmarks = new ArrayList<>();
+        List<Bookmark> bookmarks;
 
         if (null == this.bookmarksList) {
             view.showNoContentMessage();
             return ;
         }
-        for (Bookmark bookmark : this.bookmarksList) {
-            if (searchQuery.length() > 0) {
-                if (bookmark.canBeFilter(searchQuery)) {
-                     bookmarks.add(bookmark);
-                }
-            }
-            else {
-                bookmarks.add(bookmark);
-            }
-        }
+        bookmarks = (List<Bookmark>) search.search(this.bookmarksList);
 
         view.reloadEntries(bookmarks);
     }

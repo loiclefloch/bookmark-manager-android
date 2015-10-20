@@ -4,12 +4,12 @@ import android.content.Context;
 
 import com.orhanobut.logger.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import bm.bookmark_manager.common.api.RestCallback;
 import bm.bookmark_manager.common.api.RestError;
 import bm.bookmark_manager.common.model.Tag;
+import bm.bookmark_manager.common.tools.search.Search;
 import bm.bookmark_manager.common.view.Presenter;
 
 public class TagListPresenter
@@ -20,7 +20,7 @@ public class TagListPresenter
 
     protected Tag tag;
     private List<Tag> tagsList;
-    private String searchQuery = "";
+    Search search = new Search();
 
     public TagListPresenter(TagListViewInterface view, Context context) {
         initPresenter(context, view, new TagListWireframe(), new TagListInteractor());
@@ -28,7 +28,7 @@ public class TagListPresenter
 
     @Override
     public void searchChange(String query) {
-        searchQuery = query;
+        search.setQuery(query);
         update();
     }
 
@@ -44,7 +44,7 @@ public class TagListPresenter
 
     @Override
     public void searchSubmit(String query) {
-        searchQuery = query;
+        search.setQuery(query);
         view.hideKeyboard();
         update();
     }
@@ -53,6 +53,18 @@ public class TagListPresenter
     public void load() {
         view.showLoading();
         refresh();
+    }
+
+    @Override
+    public void filterByName() {
+        search.setFilter(Search.Filter.NAME);
+        update();
+    }
+
+    @Override
+    public void filterByDate() {
+        search.setFilter(Search.Filter.DATE);
+        update();
     }
 
     @Override
@@ -84,22 +96,13 @@ public class TagListPresenter
     }
 
     public void update() {
-        List<Tag> tags = new ArrayList<>();
+        List<Tag> tags;
 
         if (null == this.tagsList) {
             view.showNoContentMessage();
             return ;
         }
-        for (Tag tag : this.tagsList) {
-            if (searchQuery.length() > 0) {
-                if (tag.canBeFilter(searchQuery)) {
-                    tags.add(tag);
-                }
-            }
-            else {
-                tags.add(tag);
-            }
-        }
+        tags = (List<Tag>) search.search(this.tagsList);
 
         view.reloadEntries(tags);
     }

@@ -1,8 +1,14 @@
 package bm.bookmark_manager.common;
 
+import java.util.Locale;
+
 public class Constants {
 
-    public static class api {
+        public static Locale getCurrentLocale() {
+                return Locale.getDefault();
+        }
+
+        public static class api {
 
         public static final String URL = "https://bookmarks-manager.herokuapp.com/api";
         public static final String API_TEST_KEY = "56f503438a1609cb121b92868332b6f06a22ac5b";

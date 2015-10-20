@@ -161,6 +161,34 @@ public class TagListView extends BaseFragment
         builder.show();
     }
 
+    // -- Display filter menu
+    void showFilterMenu() {
+
+        final CharSequence menu[] = new CharSequence[]{
+                getString(R.string.filter_by_name),
+                getString(R.string.filter_by_date)
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setItems(menu, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                switch (which) {
+                    case 0: // filter by name
+                        presenter.filterByName();
+                        break;
+                    case 1: // filter by date
+                        presenter.filterByDate();
+                        break;
+                }
+
+            }
+        });
+
+        builder.show();
+    }
+
     // -- Search listeners
 
     private final SearchView.OnQueryTextListener searchOnQueryTextListener = new SearchView.OnQueryTextListener() {
@@ -209,5 +237,10 @@ public class TagListView extends BaseFragment
             showTagPopupMenu(tag);
         }
     };
+
+    @OnClick(R.id.tag_list__filter_btn)
+    void filterOnClick(View v) {
+        showFilterMenu();
+    }
 }
 

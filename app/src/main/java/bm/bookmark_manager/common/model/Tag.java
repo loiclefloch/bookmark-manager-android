@@ -2,9 +2,12 @@ package bm.bookmark_manager.common.model;
 
 import android.graphics.Color;
 
-import bm.bookmark_manager.common.Constants;
+import java.util.Date;
 
-public class Tag extends Model {
+import bm.bookmark_manager.common.Constants;
+import bm.bookmark_manager.common.tools.search.Search;
+
+public class Tag extends Model implements Search.Sortable {
 
     private String id;
     private String name;
@@ -23,6 +26,24 @@ public class Tag extends Model {
             return Color.parseColor(Constants.tag.DEFAULT_COLOR);
         }
     }
+
+    // -- Sortable
+
+    @Override
+    public String fieldToSortByName() {
+        return name;
+    }
+
+    @Override
+    public Date fieldToSortByDate() {
+        return new Date();
+    }
+
+    public boolean onQuery(String searchQuery) {
+        return name.toUpperCase().contains(searchQuery.toUpperCase());
+    }
+
+    // -- Model
 
     @Override
     protected String getClassName() {
@@ -63,7 +84,4 @@ public class Tag extends Model {
         this.owner = owner;
     }
 
-    public boolean canBeFilter(String searchQuery) {
-        return name.toUpperCase().contains(searchQuery.toUpperCase());
-    }
 }

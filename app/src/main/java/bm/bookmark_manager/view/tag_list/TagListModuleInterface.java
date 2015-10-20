@@ -15,4 +15,8 @@ public interface TagListModuleInterface {
     void searchSubmit(String query);
 
     void load();
+
+    void filterByName();
+
+    void filterByDate();
 }
