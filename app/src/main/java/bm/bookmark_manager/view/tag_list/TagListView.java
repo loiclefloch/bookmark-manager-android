@@ -1,8 +1,8 @@
-package bm.bookmark_manager.view.bm_list;
+package bm.bookmark_manager.view.tag_list;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -19,46 +19,47 @@ import com.pedrogomez.renderers.RendererAdapter;
 import java.util.List;
 
 import bm.bookmark_manager.R;
-import bm.bookmark_manager.common.model.Bookmark;
+import bm.bookmark_manager.common.model.Tag;
+import bm.bookmark_manager.common.renderers.tag_renderer.TagRenderer;
+import bm.bookmark_manager.common.renderers.tag_renderer.TagRendererBuilder;
 import bm.bookmark_manager.common.view.BaseFragment;
-import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRenderer;
-import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRendererBuilder;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BmListView extends BaseFragment
-        implements BmListViewInterface {
-
-    BmListPresenter presenter;
-    RendererAdapter<Bookmark> adapter;
+public class TagListView extends BaseFragment
+        implements TagListViewInterface {
 
     // -- views
-
-    @Bind(R.id.bm_list__list_view)
-    ListView listView;
-    @Bind(R.id.bm_list__search_view)
+    @Bind(R.id.tag_list__search_view)
     SearchView searchView;
-    @Bind(R.id.bm_list__swipe_container)
+    @Bind(R.id.tag_list__list_view)
+    ListView listView;
+    @Bind(R.id.tag_list__swipe_container)
     SwipeRefreshLayout swipeRefreshLayout;
+    @Bind(R.id.tag_list__tag_add_fab)
+    FloatingActionButton tagAddFab;
 
-    @Nullable
+    // --
+    TagListModuleInterface presenter;
+    RendererAdapter<Tag> adapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        presenter = new BmListPresenter(this, getContext());
+        presenter = new TagListPresenter(this, getContext());
 
-        View rootView = inflater.inflate(R.layout.fragment__bm_list, container, false);
+        View rootView = inflater.inflate(R.layout.fragment__tag_list, container, false);
         ButterKnife.bind(this, rootView);
 
         // -- Setup adapter
 
-        AdapteeCollection<Bookmark> bookmarkCollection = new ListAdapteeCollection<>();
+        AdapteeCollection<Tag> tagCollection = new ListAdapteeCollection<>();
         adapter = new RendererAdapter<>(
                 inflater,
-                new BookmarkRendererBuilder(getContext(), onBookmarkAction),
-                bookmarkCollection);
+                new TagRendererBuilder(getContext(), onTagAction),
+                tagCollection);
         listView.setAdapter(adapter);
 
         presenter.load();
@@ -94,19 +95,19 @@ public class BmListView extends BaseFragment
         hideKeyboard();
     }
 
-    // --- BmListViewInterface
+    // --- TagListViewInterface
 
     @Override
-    public void reloadEntries(List<Bookmark> bookmarkList) {
+    public void reloadEntries(List<Tag> tagList) {
         adapter.clear();
-        adapter.addAll(bookmarkList);
+        adapter.addAll(tagList);
         adapter.notifyDataSetChanged();
     }
 
     @Override
     public void showNoContentMessage() {
         if (getView() != null) {
-            Snackbar.make(getView(), "No bookmarks", Snackbar.LENGTH_LONG)
+            Snackbar.make(getView(), "No tags", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
     }
@@ -118,7 +119,7 @@ public class BmListView extends BaseFragment
 
     @Override
     public void showLoadingErrorMessage() {
-        displayError(getString(R.string.error_when_loading_bookmarks));
+        displayError(getString(R.string.error_when_loading_tags));
     }
 
     @Override
@@ -131,37 +132,26 @@ public class BmListView extends BaseFragment
         swipeRefreshLayout.setRefreshing(false);
     }
 
-    // -- Display bookmark menu (at long click)
+    // -- Display tag menu (at long click)
 
-    void showBookmarkPopupMenu(final Bookmark bookmark) {
+    void showTagPopupMenu(final Tag tag) {
 
         final CharSequence menu[] = new CharSequence[]{
-                getString(R.string.open_link),
-                getString(R.string.preview).concat(" ").concat(bookmark.isReadable() ? "" : getString(R.string.bookmark_readable_content_empty_menu_indication)),
                 getString(R.string.edit),
-                getString(R.string.tags),
                 getString(R.string.delete)
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(bookmark.getTitle());
+        builder.setTitle(tag.getName());
         builder.setItems(menu, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
                 switch (which) {
-                    case 0: // open_link
-                        presenter.openBookmarkLink(bookmark);
+                    case 0: // edit
+                        presenter.presentEditTag(tag);
                         break;
-                    case 1: // preview
-                        presenter.previewBookmark(bookmark);
-                        break;
-                    case 2: // edit
-                        presenter.editBookmark(bookmark);
-                        break;
-                    case 3: // tags
-                        break;
-                    case 4: // delete
+                    case 1: // delete
                         break;
                 }
 
@@ -203,20 +193,21 @@ public class BmListView extends BaseFragment
 
     // --- Events
 
-    @OnClick(R.id.bm_list__bm_add_fab)
-    void addNewBookmarkOnClick(View v) {
-        presenter.presentAddNewBookmark();
+    @OnClick(R.id.tag_list__tag_add_fab)
+    void addNewTagOnClick(View v) {
+        presenter.presentAddNewTag();
     }
 
-    BookmarkRenderer.OnBookmarkAction onBookmarkAction = new BookmarkRenderer.OnBookmarkAction() {
+    TagRenderer.OnTagAction onTagAction = new TagRenderer.OnTagAction() {
         @Override
-        public void onBookmarkClicked(Bookmark bookmark) {
-            presenter.openBookmark(bookmark);
+        public void onTagClicked(Tag tag) {
+            // TODO: What action do when click on tag ?
         }
 
         @Override
-        public void onBookmarkLongClicked(Bookmark bookmark) {
-            showBookmarkPopupMenu(bookmark);
+        public void onTagLongClicked(Tag tag) {
+            showTagPopupMenu(tag);
         }
     };
 }
+

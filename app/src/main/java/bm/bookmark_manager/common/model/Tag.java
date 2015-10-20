@@ -62,4 +62,8 @@ public class Tag extends Model {
     public void setOwner(String owner) {
         this.owner = owner;
     }
+
+    public boolean canBeFilter(String searchQuery) {
+        return name.toUpperCase().contains(searchQuery.toUpperCase());
+    }
 }

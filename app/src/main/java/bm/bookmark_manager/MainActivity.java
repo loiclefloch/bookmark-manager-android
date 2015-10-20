@@ -3,6 +3,7 @@ package bm.bookmark_manager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -10,11 +11,39 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
 import bm.bookmark_manager.common.view.BaseAppCompatActivity;
-import bm.bookmark_manager.view.bm_list.BmListView;
 
 public class MainActivity extends BaseAppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    public enum Screen {
+        BOOKMARKS,
+        TAGS,
+        SETTINGS,
+        PROFILE
+    }
+
+    public static class FragmentInfo {
+        public String name;
+        public String fragmentName;
+
+        FragmentInfo(String name, String classPath) {
+            this.name = name;
+            this.fragmentName = classPath;
+        }
+    }
+
+    private static final Map<Screen, FragmentInfo> fragments = Collections.unmodifiableMap(
+            new HashMap<Screen, FragmentInfo>() {{
+                put(Screen.BOOKMARKS, new FragmentInfo("Bookmarks", "bm.bookmark_manager.view.bm_list.BmListView"));
+                put(Screen.TAGS, new FragmentInfo("Tags", "bm.bookmark_manager.view.tag_list.TagListView"));
+            }});
+
+    Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +51,9 @@ public class MainActivity extends BaseAppCompatActivity
 
         initView(R.layout.activity__main, R.id.nav_view);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -35,7 +65,7 @@ public class MainActivity extends BaseAppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Open home (bookmark list)
-        openFragment(new BmListView(), "Home");
+        openFragment(Screen.BOOKMARKS);
         navigationView.getMenu().getItem(0).setChecked(true);
     }
 
@@ -63,9 +93,9 @@ public class MainActivity extends BaseAppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_home) {
-            openFragment(new BmListView(), "Home");
+            openFragment(Screen.BOOKMARKS);
         } else if (id == R.id.nav_tags) {
-
+            openFragment(Screen.TAGS);
         } else if (id == R.id.nav_settings) {
 
         } else if (id == R.id.nav_logout) {
@@ -77,9 +107,21 @@ public class MainActivity extends BaseAppCompatActivity
         return true;
     }
 
-    private void openFragment(Fragment fragment, String name) {
+    private void openFragment(Screen screen) {
+
+        FragmentInfo fragmentInfo = fragments.get(screen);
+
+        toolbar.setTitle(fragmentInfo.name);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        Fragment fragment = fragmentManager.findFragmentByTag(fragmentInfo.fragmentName);
+
+        if (fragment == null) {
+            fragment = Fragment.instantiate(this, fragmentInfo.fragmentName);
+        }
+
         FragmentTransaction tx = getSupportFragmentManager().beginTransaction();
-        tx.replace(R.id.main, fragment, name);
+        tx.replace(R.id.main, fragment, fragmentInfo.fragmentName);
         tx.commit();
     }
 }

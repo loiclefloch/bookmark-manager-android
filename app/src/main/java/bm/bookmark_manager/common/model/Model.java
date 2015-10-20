@@ -31,4 +31,6 @@ public abstract class Model implements Serializable {
         Gson gson = new GsonBuilder().create();
         return gson.fromJson(gson.toJson(this), type);
     }
+
+
 }

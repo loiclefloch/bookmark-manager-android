@@ -5,6 +5,7 @@ import java.util.List;
 import bm.bookmark_manager.BuildConfig;
 import bm.bookmark_manager.common.Constants;
 import bm.bookmark_manager.common.model.Bookmark;
+import bm.bookmark_manager.common.model.Tag;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.http.Body;
@@ -17,6 +18,7 @@ public class ApiManager {
     private static ApiManager instance;
 
     public BookmarkService bookmarkService;
+    public TagService tagService;
 
     RestAdapter catalogRestAdapter;
 
@@ -44,6 +46,7 @@ public class ApiManager {
                 .build();
 
         bookmarkService = catalogRestAdapter.create(BookmarkService.class);
+        tagService = catalogRestAdapter.create(TagService.class);
     }
 
     public void getBookmarks(RestCallback<List<Bookmark>> callback) {
@@ -56,6 +59,10 @@ public class ApiManager {
 
     public void putBookmark(Bookmark bookmark, RestCallback<Bookmark> callback) {
         bookmarkService.put(bookmark, callback);
+    }
+
+    public void getTags(RestCallback<List<Tag>> callback) {
+        tagService.get(callback);
     }
 
     // ----------- Services.
@@ -79,6 +86,22 @@ public class ApiManager {
 
         @PUT("/bookmark")
         void put(@Body Bookmark bookmark, RestCallback<Bookmark> callback);
+    }
+
+    public interface TagService {
+        // -- The api errors code
+        // TODO
+
+        // -- The routes
+
+        @GET("/tag")
+        void get(RestCallback<List<Tag>> callback);
+
+        @POST("/tag")
+        void post(@Body Tag bookmark, RestCallback<Tag> callback);
+
+        @PUT("/tag")
+        void put(@Body Tag bookmark, RestCallback<Tag> callback);
     }
 
 }

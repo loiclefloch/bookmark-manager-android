@@ -1,11 +1,11 @@
-package bm.bookmark_manager.view.bm_list.renderer;
+package bm.bookmark_manager.common.renderers.tag_renderer;
 
 import android.content.Context;
 import android.view.View;
 
-public class NormalBookmarkRenderer extends BookmarkRenderer {
+public class NormalTagRenderer extends TagRenderer {
 
-    public NormalBookmarkRenderer(Context context) {
+    public NormalTagRenderer(Context context) {
         super(context);
     }
 

@@ -96,6 +96,8 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
 
                         view.showLoadingErrorMessage();
                         view.showNoContentMessage();
+
+                        update();
                     }
                 });
     }
@@ -104,7 +106,7 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
         List<Bookmark> bookmarks = new ArrayList<>();
 
         if (null == this.bookmarksList) {
-            refresh();
+            view.showNoContentMessage();
             return ;
         }
         for (Bookmark bookmark : this.bookmarksList) {

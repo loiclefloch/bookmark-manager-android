@@ -1,4 +1,4 @@
-package bm.bookmark_manager.view.bm_list.renderer;
+package bm.bookmark_manager.common.renderers.bookmark_renderer;
 
 import android.content.Context;
 
