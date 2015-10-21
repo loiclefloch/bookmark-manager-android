@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file:///Volumes/DATA/dev/bm/bookmarks-manager-android/dev/app/app.iml" filepath="/Volumes/DATA/dev/bm/bookmarks-manager-android/dev/app/app.iml" />
-      <module fileurl="file:///Volumes/DATA/dev/bm/bookmarks-manager-android/dev/dev.iml" filepath="/Volumes/DATA/dev/bm/bookmarks-manager-android/dev/dev.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bookmarks-manager-android.iml" filepath="$PROJECT_DIR$/bookmarks-manager-android.iml" />
     </modules>
   </component>
 </project>
