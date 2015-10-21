@@ -13,4 +13,7 @@ public interface TagListViewInterface extends ViewInterface {
 
     void showListRefreshDialog();
     void hideListRefreshDialog();
+
+    void setCurrentFilter(int type);
+    void setCurrentOrder(int order);
 }

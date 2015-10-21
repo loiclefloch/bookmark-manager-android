@@ -21,6 +21,7 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
 
     BmListPresenter(BmListViewInterface view, Context context) {
         initPresenter(context, view, new BmListWireframe(), new BmListInteractor());
+        changeSearchType(Search.Filter.DATE, false);
     }
 
     @Override
@@ -76,9 +77,15 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
     }
 
     private void changeSearchType(int type) {
+        changeSearchType(type, true);
+    }
+
+    private void changeSearchType(int type, boolean shouldUpdate) {
         search.setFilter(type);
         view.setCurrentFilter(type);
-        update();
+        if (shouldUpdate) {
+            update();
+        }
     }
 
     // -- Search

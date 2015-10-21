@@ -72,7 +72,7 @@ public class Search {
                     return compareStringWithoutCase(lhs.fieldToSortByName(), rhs.fieldToSortByName());
                 }
                 else if (Tools.checkBit(filter, Filter.DATE)) {
-                    return compareDate(lhs.fieldToSortByDate(), rhs.fieldToSortByDate());
+                    return compareDateMostRecent(lhs.fieldToSortByDate(), rhs.fieldToSortByDate());
                 }
                 return 0;
             }
@@ -96,8 +96,8 @@ public class Search {
         return str.replaceAll("[^A-Za-z0-9 ]", "").trim().toUpperCase();
     }
 
-    private int compareDate(Date a, Date b) {
-        return a.compareTo(b);
+    private int compareDateMostRecent(Date a, Date b) {
+        return b.compareTo(a);
     }
 
     // -- Getters and setters

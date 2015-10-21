@@ -22,6 +22,7 @@ import bm.bookmark_manager.R;
 import bm.bookmark_manager.common.model.Tag;
 import bm.bookmark_manager.common.renderers.tag_renderer.TagRenderer;
 import bm.bookmark_manager.common.renderers.tag_renderer.TagRendererBuilder;
+import bm.bookmark_manager.common.tools.search.Search;
 import bm.bookmark_manager.common.view.BaseFragment;
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -43,6 +44,9 @@ public class TagListView extends BaseFragment
     // --
     TagListModuleInterface presenter;
     RendererAdapter<Tag> adapter;
+
+    private int currentFilter;
+    private int order;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -132,6 +136,17 @@ public class TagListView extends BaseFragment
         swipeRefreshLayout.setRefreshing(false);
     }
 
+
+    @Override
+    public void setCurrentFilter(int filter) {
+        this.currentFilter = filter;
+    }
+
+    @Override
+    public void setCurrentOrder(int order) {
+        this.order = order;
+    }
+
     // -- Display tag menu (at long click)
 
     void showTagPopupMenu(final Tag tag) {
@@ -165,8 +180,8 @@ public class TagListView extends BaseFragment
     void showFilterMenu() {
 
         final CharSequence menu[] = new CharSequence[]{
-                getString(R.string.filter_by_name),
-                getString(R.string.filter_by_date)
+                getString(R.string.filter_by_name).concat(currentFilter == Search.Filter.NAME ? " X" : ""),
+                getString(R.string.filter_by_date).concat(currentFilter == Search.Filter.DATE ? " X" : ""),
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -242,5 +257,6 @@ public class TagListView extends BaseFragment
     void filterOnClick(View v) {
         showFilterMenu();
     }
+
 }
 

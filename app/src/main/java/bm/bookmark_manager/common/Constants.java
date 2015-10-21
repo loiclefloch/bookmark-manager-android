@@ -4,15 +4,16 @@ import java.util.Locale;
 
 public class Constants {
 
-        public static Locale getCurrentLocale() {
-                return Locale.getDefault();
-        }
+    public static Locale getCurrentLocale() {
+        return Locale.getDefault();
+    }
 
-        public static class api {
+    public static class api {
 
         public static final String URL = "https://bookmarks-manager.herokuapp.com/api";
         public static final String API_TEST_KEY = "56f503438a1609cb121b92868332b6f06a22ac5b";
         public static final String HEADER_API_KEY = "Apikey";
+        public static final java.lang.String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'";
     }
 
     public static class tag {

@@ -137,6 +137,16 @@ public class BmListView extends BaseFragment
         swipeRefreshLayout.setRefreshing(false);
     }
 
+    @Override
+    public void setCurrentFilter(int filter) {
+        this.currentFilter = filter;
+    }
+
+    @Override
+    public void setCurrentOrder(int order) {
+        this.order = order;
+    }
+
     // -- Display bookmark menu (at long click)
 
     void showBookmarkPopupMenu(final Bookmark bookmark) {
@@ -257,15 +267,5 @@ public class BmListView extends BaseFragment
     @OnClick(R.id.bm_list__filter_btn)
     void onFilterBtm(View v) {
         showFilterMenu();
-    }
-
-    @Override
-    public void setCurrentFilter(int filter) {
-        this.currentFilter = filter;
-    }
-
-    @Override
-    public void setCurrentOrder(int order) {
-        this.order = order;
     }
 }

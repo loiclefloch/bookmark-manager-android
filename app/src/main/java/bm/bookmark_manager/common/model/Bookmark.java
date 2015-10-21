@@ -27,6 +27,7 @@ public class Bookmark extends Model implements Search.Sortable {
     private String createdAt;
     @SerializedName("updated_at")
     private String updatedAt;
+    @SerializedName("readable_content")
     private String readableContent;
     private List<Tag> tags;
 
@@ -49,7 +50,7 @@ public class Bookmark extends Model implements Search.Sortable {
 
     @Override
     public Date fieldToSortByDate() {
-        return ApiTools.getDateWithString(updatedAt);
+        return getUpdatedAt();
     }
 
     @Override
@@ -166,20 +167,12 @@ public class Bookmark extends Model implements Search.Sortable {
         this.tags = tags;
     }
 
-    public String getCreatedAt() {
-        return createdAt;
+    public Date getCreatedAt() {
+        return ApiTools.getDateWithString(createdAt);
     }
 
-    public void setCreatedAt(String createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public String getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(String updatedAt) {
-        this.updatedAt = updatedAt;
+    public Date getUpdatedAt() {
+        return ApiTools.getDateWithString(updatedAt);
     }
 
     public String getOwner() {

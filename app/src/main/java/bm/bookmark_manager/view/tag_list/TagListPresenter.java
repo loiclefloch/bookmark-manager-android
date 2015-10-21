@@ -24,6 +24,7 @@ public class TagListPresenter
 
     public TagListPresenter(TagListViewInterface view, Context context) {
         initPresenter(context, view, new TagListWireframe(), new TagListInteractor());
+        changeSearchType(Search.Filter.NAME, false);
     }
 
     @Override
@@ -57,14 +58,24 @@ public class TagListPresenter
 
     @Override
     public void filterByName() {
-        search.setFilter(Search.Filter.NAME);
-        update();
+        changeSearchType(Search.Filter.NAME);
     }
 
     @Override
     public void filterByDate() {
-        search.setFilter(Search.Filter.DATE);
-        update();
+        changeSearchType(Search.Filter.DATE);
+    }
+
+    private void changeSearchType(int type) {
+        changeSearchType(type, true);
+    }
+
+    private void changeSearchType(int type, boolean shouldUpdate) {
+        search.setFilter(type);
+        view.setCurrentFilter(type);
+        if (shouldUpdate) {
+            update();
+        }
     }
 
     @Override

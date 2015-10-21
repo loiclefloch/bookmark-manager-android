@@ -2,9 +2,12 @@ package bm.bookmark_manager.common.model;
 
 import android.graphics.Color;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.Date;
 
 import bm.bookmark_manager.common.Constants;
+import bm.bookmark_manager.common.api.ApiTools;
 import bm.bookmark_manager.common.tools.search.Search;
 
 public class Tag extends Model implements Search.Sortable {
@@ -13,6 +16,10 @@ public class Tag extends Model implements Search.Sortable {
     private String name;
     private String color;
     private String owner;
+    @SerializedName("created_at")
+    private String createdAt;
+    @SerializedName("updated_at")
+    private String updatedAt;
 
     /**
      * Return the tag color-int value to use on view
@@ -35,8 +42,9 @@ public class Tag extends Model implements Search.Sortable {
     }
 
     @Override
-    public Date fieldToSortByDate() {
-        return new Date();
+    public Date fieldToSortByDate()
+    {
+        return getUpdatedAt();
     }
 
     public boolean onQuery(String searchQuery) {
@@ -82,6 +90,14 @@ public class Tag extends Model implements Search.Sortable {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public Date getCreatedAt() {
+        return ApiTools.getDateWithString(createdAt);
+    }
+
+    public Date getUpdatedAt() {
+        return ApiTools.getDateWithString(updatedAt);
     }
 
 }
