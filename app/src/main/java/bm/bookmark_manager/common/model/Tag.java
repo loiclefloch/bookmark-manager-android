@@ -10,8 +10,9 @@ import bm.bookmark_manager.common.Constants;
 import bm.bookmark_manager.common.api.ApiTools;
 import bm.bookmark_manager.common.tools.search.Search;
 
-public class Tag extends Model implements Search.Sortable {
+public class Tag extends SelectableModel implements Search.Sortable {
 
+    @SerializedName("_id")
     private String id;
     private String name;
     private String color;

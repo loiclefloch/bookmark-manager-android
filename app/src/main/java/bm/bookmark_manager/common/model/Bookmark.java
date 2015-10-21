@@ -8,10 +8,12 @@ import com.orhanobut.logger.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import bm.bookmark_manager.common.api.ApiTools;
+import bm.bookmark_manager.common.tools.Tools;
 import bm.bookmark_manager.common.tools.search.Search;
 
 public class Bookmark extends Model implements Search.Sortable {
@@ -191,4 +193,29 @@ public class Bookmark extends Model implements Search.Sortable {
         this.readableContent = readableContent;
     }
 
+    public boolean haveTag(Tag tag) {
+        if (tags == null) {
+            return false;
+        }
+        for (Tag t : tags) {
+            if (Tools.equals(t.getId(), tag.getId())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addTag(Tag tag) {
+        if (tags == null) {
+            tags = new ArrayList<>();
+        }
+        this.tags.add(tag);
+    }
+
+    public void removeTag(Tag tag) {
+        if (tags == null) {
+            return;
+        }
+        this.tags.remove(tag);
+    }
 }

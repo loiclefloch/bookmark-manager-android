@@ -12,6 +12,7 @@ import retrofit.http.Body;
 import retrofit.http.GET;
 import retrofit.http.POST;
 import retrofit.http.PUT;
+import retrofit.http.Path;
 
 public class ApiManager {
 
@@ -58,7 +59,7 @@ public class ApiManager {
     }
 
     public void putBookmark(Bookmark bookmark, RestCallback<Bookmark> callback) {
-        bookmarkService.put(bookmark, callback);
+        bookmarkService.put(bookmark.getId(), bookmark, callback);
     }
 
     public void getTags(RestCallback<List<Tag>> callback) {
@@ -84,8 +85,8 @@ public class ApiManager {
         @POST("/bookmark")
         void post(@Body Bookmark bookmark, RestCallback<Bookmark> callback);
 
-        @PUT("/bookmark")
-        void put(@Body Bookmark bookmark, RestCallback<Bookmark> callback);
+        @PUT("/bookmark/{id}")
+        void put(@Path("id") String id, @Body Bookmark bookmark, RestCallback<Bookmark> callback);
     }
 
     public interface TagService {

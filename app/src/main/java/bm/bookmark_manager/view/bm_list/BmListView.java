@@ -20,10 +20,13 @@ import java.util.List;
 
 import bm.bookmark_manager.R;
 import bm.bookmark_manager.common.model.Bookmark;
+import bm.bookmark_manager.common.model.Tag;
 import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRenderer;
 import bm.bookmark_manager.common.renderers.bookmark_renderer.BookmarkRendererBuilder;
 import bm.bookmark_manager.common.tools.search.Search;
 import bm.bookmark_manager.common.view.BaseFragment;
+import bm.bookmark_manager.common.view.ListPicker.PickerListener;
+import bm.bookmark_manager.common.view.ListPicker.TagPicker;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -123,8 +126,23 @@ public class BmListView extends BaseFragment
     }
 
     @Override
+    public void showLoadingTagsErrorMessage() {
+        displayError(getString(R.string.error_when_loading_tags));
+    }
+
+    @Override
     public void showLoadingErrorMessage() {
         displayError(getString(R.string.error_when_loading_bookmarks));
+    }
+
+    @Override
+    public void displayBookmarkUpdatedMessage() {
+        displayError(getString(R.string.bookmark_updated));
+    }
+
+    @Override
+    public void displayBookmarkUpdateErrorMessage(String error) {
+        displayError(error);
     }
 
     @Override
@@ -147,6 +165,24 @@ public class BmListView extends BaseFragment
         this.order = order;
     }
 
+    public void displayChooseBookmarkPicker(final Bookmark bookmark, final List<Tag> tagList) {
+        TagPicker picker = new TagPicker();
+
+        picker.setListener(new PickerListener<Tag>() {
+            @Override
+            public void onValidated(List<Tag> objects) {
+                presenter.chooseBookmarkTags(bookmark, objects);
+            }
+
+            @Override
+            public List<Tag> getData() {
+                return tagList;
+            }
+        });
+
+        picker.show(getFragmentManager(), "TAGS_PICKER");
+    }
+
     // -- Display bookmark menu (at long click)
 
     void showBookmarkPopupMenu(final Bookmark bookmark) {
@@ -155,7 +191,7 @@ public class BmListView extends BaseFragment
                 getString(R.string.open_link),
                 getString(R.string.preview).concat(" ").concat(bookmark.isReadable() ? "" : getString(R.string.bookmark_readable_content_empty_menu_indication)),
                 getString(R.string.edit),
-                getString(R.string.tags),
+                getString(R.string.edit_tags),
                 getString(R.string.delete)
         };
 
@@ -176,6 +212,7 @@ public class BmListView extends BaseFragment
                         presenter.editBookmark(bookmark);
                         break;
                     case 3: // tags
+                        presenter.openEditBookmarkTags(bookmark);
                         break;
                     case 4: // delete
                         break;

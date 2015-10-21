@@ -3,7 +3,34 @@ package bm.bookmark_manager.common.tools;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import bm.bookmark_manager.common.model.Tag;
+
+
 public class Tools {
+
+    public static class TagTools {
+
+        public static Tag findTagOnList(List<Tag> selectedList, Tag tag) {
+            for (Tag t : selectedList) {
+
+                if (Tools.equals(t.getId(), tag.getId())) {
+                    return t;
+                }
+            }
+            return null;
+        }
+
+
+        public static List<Tag> cloneTagList(List<Tag> list) {
+            List<Tag> clone = new ArrayList<Tag>(list.size());
+            for (Tag item: list) clone.add(item.copy(Tag.class));
+            return clone;
+        }
+
+    }
 
     public static class window {
 

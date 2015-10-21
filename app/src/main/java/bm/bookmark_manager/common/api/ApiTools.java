@@ -17,7 +17,6 @@ public class ApiTools {
 
         try {
             Date date = format.parse(str);
-            Logger.d("Date: " + date.toString());
             return date;
         } catch (ParseException e) {
             e.printStackTrace();

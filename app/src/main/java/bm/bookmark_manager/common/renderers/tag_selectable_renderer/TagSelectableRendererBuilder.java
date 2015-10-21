@@ -1,4 +1,4 @@
-package bm.bookmark_manager.common.renderers.tag_renderer;
+package bm.bookmark_manager.common.renderers.tag_selectable_renderer;
 
 import android.content.Context;
 
@@ -13,11 +13,11 @@ import javax.inject.Inject;
 
 import bm.bookmark_manager.common.model.Tag;
 
-public class TagRendererBuilder extends RendererBuilder<Tag> {
+public class TagSelectableRendererBuilder extends RendererBuilder<Tag> {
 
     @Inject
-    public TagRendererBuilder(Context context, TagRenderer.OnTagAction onTagAction) {
-        Collection<Renderer<Tag>> prototypes = getPrototypes(context, onTagAction);
+    public TagSelectableRendererBuilder(Context context, TagSelectableRenderer.OnSelectAction onSelectAction) {
+        Collection<Renderer<Tag>> prototypes = getPrototypes(context, onSelectAction);
         setPrototypes(prototypes);
     }
 
@@ -32,7 +32,7 @@ public class TagRendererBuilder extends RendererBuilder<Tag> {
     protected Class getPrototypeClass(Tag content) {
         Class prototypeClass;
 
-        prototypeClass = NormalTagRenderer.class;
+        prototypeClass = NormalTagSelectableRenderer.class;
 
         return prototypeClass;
     }
@@ -45,11 +45,11 @@ public class TagRendererBuilder extends RendererBuilder<Tag> {
      * @return Renderer<Tag> prototypes for RendererBuilder.
      */
     private List<Renderer<Tag>> getPrototypes(Context context,
-                                                TagRenderer.OnTagAction onTagClickedListener) {
+                                                TagSelectableRenderer.OnSelectAction onSelectListener) {
 
         List<Renderer<Tag>> prototypes = new LinkedList<Renderer<Tag>>();
-        NormalTagRenderer normalTagRenderer = new NormalTagRenderer(context);
-        normalTagRenderer.setListener(onTagClickedListener);
+        NormalTagSelectableRenderer normalTagRenderer = new NormalTagSelectableRenderer(context);
+        normalTagRenderer.setListener(onSelectListener);
         prototypes.add(normalTagRenderer);
 
         return prototypes;

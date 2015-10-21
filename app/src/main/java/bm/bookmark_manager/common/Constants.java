@@ -20,7 +20,7 @@ public class Constants {
         public static final String DEFAULT_COLOR = "#95A5A6";
 
         /**
-         * The default colors for the picker
+         * The default colors for the Picker
          */
         public static final String[] COLORS = {
                 "#468966",

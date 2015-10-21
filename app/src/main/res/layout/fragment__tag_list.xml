@@ -15,21 +15,22 @@
             style="?android:attr/buttonStyleSmall"
             android:layout_width="100dp"
             android:layout_height="50dp"
-            android:text="@string/sort"
+            android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_alignParentStart="true" />
+            android:text="@string/sort" />
 
         <SearchView
             android:id="@+id/tag_list__search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/tag_list__filter_btn"
             android:actionViewClass="android.support.v7.widget.SearchView"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:hint="@string/search"
             android:iconifiedByDefault="false"
-            android:textColorHint="@android:color/white"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@+id/tag_list__filter_btn" />
+            android:textColorHint="@android:color/white" />
 
     </RelativeLayout>
 

@@ -1,10 +1,11 @@
-package bm.bookmark_manager.common.renderers.tag_renderer;
+package bm.bookmark_manager.common.renderers.tag_selectable_renderer;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pedrogomez.renderers.Renderer;
@@ -14,21 +15,18 @@ import bm.bookmark_manager.common.model.Tag;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnLongClick;
 
-public abstract class TagRenderer extends Renderer<Tag> {
+public abstract class TagSelectableRenderer extends Renderer<Tag> {
 
-    public interface OnTagAction {
-        void onTagClicked(Tag tag);
-
-        void onTagLongClicked(Tag tag);
+    public interface OnSelectAction {
+        void onSelect(Tag tag);
     }
 
     private final Context context;
 
-    private OnTagAction listener;
+    private OnSelectAction listener;
 
-    public TagRenderer(Context context) {
+    public TagSelectableRenderer(Context context) {
         this.context = context;
     }
 
@@ -38,12 +36,13 @@ public abstract class TagRenderer extends Renderer<Tag> {
     @Bind(R.id.tag_color_view)
     View color;
 
+    @Bind(R.id.tag_selected_icon)
+    ImageView selectedIcon;
+
     @Override
     protected View inflate(LayoutInflater inflater, ViewGroup parent) {
-        View inflatedView = inflater.inflate(R.layout.renderer__tag, parent, false);
+        View inflatedView = inflater.inflate(R.layout.renderer__tag_selectable, parent, false);
         ButterKnife.bind(this, inflatedView);
-
-
         return inflatedView;
     }
 
@@ -51,18 +50,8 @@ public abstract class TagRenderer extends Renderer<Tag> {
     void onTagClicked() {
         if (listener != null) {
             Tag tag = getContent();
-            listener.onTagClicked(tag);
+            listener.onSelect(tag);
         }
-    }
-
-    @OnLongClick(R.id.tag_row)
-    boolean onTagLongClicked() {
-        if (listener != null) {
-            Tag tag = getContent();
-            listener.onTagLongClicked(tag);
-            return true;
-        }
-        return false;
     }
 
     @Override
@@ -71,6 +60,16 @@ public abstract class TagRenderer extends Renderer<Tag> {
 
         renderTitle(tag);
         renderColor(tag);
+        renderSelected(tag);
+    }
+
+    protected void renderSelected(Tag tag) {
+        if (tag.isSelected()) {
+            selectedIcon.setVisibility(View.VISIBLE);
+        }
+        else {
+            selectedIcon.setVisibility(View.GONE);
+        }
     }
 
     private void renderColor(Tag tag) {
@@ -81,7 +80,7 @@ public abstract class TagRenderer extends Renderer<Tag> {
        this.title.setText(tag.getName());
     }
 
-    public void setListener(OnTagAction listener) {
+    public void setListener(OnSelectAction listener) {
         this.listener = listener;
     }
 }

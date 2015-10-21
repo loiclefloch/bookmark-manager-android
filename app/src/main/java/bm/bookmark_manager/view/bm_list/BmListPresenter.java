@@ -9,6 +9,8 @@ import java.util.List;
 import bm.bookmark_manager.common.api.RestCallback;
 import bm.bookmark_manager.common.api.RestError;
 import bm.bookmark_manager.common.model.Bookmark;
+import bm.bookmark_manager.common.model.Tag;
+import bm.bookmark_manager.common.tools.Tools;
 import bm.bookmark_manager.common.tools.search.Search;
 import bm.bookmark_manager.common.view.Presenter;
 import bm.bookmark_manager.common.view.RootWireframe;
@@ -17,6 +19,8 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
         implements BmListModuleInterface {
 
     List<Bookmark> bookmarksList;
+    List<Tag> tagsList;
+
     Search search = new Search();
 
     BmListPresenter(BmListViewInterface view, Context context) {
@@ -55,15 +59,13 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
     public void searchSubmit(String query) {
         search.setQuery(query);
         view.hideKeyboard();
-        update();
+        updateBookmarkListView();
     }
-
-
 
     @Override
     public void searchChange(String query) {
         search.setQuery(query);
-        update();
+        updateBookmarkListView();
     }
 
     @Override
@@ -76,6 +78,71 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
         changeSearchType(Search.Filter.DATE);
     }
 
+    @Override
+    public void openEditBookmarkTags(final Bookmark bookmark) {
+
+        if (tagsList != null) {
+
+            // -- copy the list of tags
+            List<Tag> copyOfTagsList = Tools.TagTools.cloneTagList(tagsList);
+
+            // -- select tags that the bookmark have
+            for (Tag tag : copyOfTagsList) {
+                if (bookmark.haveTag(tag)) {
+                    tag.select();
+                }
+            }
+
+            view.displayChooseBookmarkPicker(bookmark, copyOfTagsList);
+        }
+        else {
+            view.showLoading();
+            interactor.getTags(new RestCallback<List<Tag>>() {
+                @Override
+                public void success(List<Tag> tags) {
+                    tagsList = tags;
+                    openEditBookmarkTags(bookmark); // retry
+                    view.hideLoading();
+                }
+
+                @Override
+                public void failure(RestError restError) {
+                    tagsList = null;
+                    view.hideLoading();
+                    view.showLoadingTagsErrorMessage();
+                }
+            });
+        }
+    }
+
+    @Override
+    public void chooseBookmarkTags(final Bookmark bookmark, List<Tag> tags) {
+        bookmark.setTags(tags);
+
+        view.showLoading();
+        interactor.putBookmark(bookmark, new RestCallback<Bookmark>() {
+            @Override
+            public void success(Bookmark updatedBookmark) {
+                // updateBookmarkListView bookmark on list
+                bookmarksList.remove(bookmark);
+                bookmarksList.add(updatedBookmark);
+
+                updateBookmarkListView();
+
+                view.hideLoading();
+                view.displayBookmarkUpdatedMessage();
+            }
+
+            @Override
+            public void failure(RestError restError) {
+                view.hideLoading();
+                view.displayBookmarkUpdateErrorMessage(restError.getMessage());
+            }
+        });
+    }
+
+    // -- Search tools
+
     private void changeSearchType(int type) {
         changeSearchType(type, true);
     }
@@ -84,7 +151,7 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
         search.setFilter(type);
         view.setCurrentFilter(type);
         if (shouldUpdate) {
-            update();
+            updateBookmarkListView();
         }
     }
 
@@ -106,9 +173,23 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
                     @Override
                     public void success(List<Bookmark> bookmarksResponse) {
                         bookmarksList = bookmarksResponse;
-                        update();
+                        updateBookmarkListView();
+
                         view.hideListRefreshDialog();
                         view.hideLoading();
+
+                        // -- get tags in background (totally async)
+                        interactor.getTags(new RestCallback<List<Tag>>() {
+                            @Override
+                            public void success(List<Tag> tags) {
+                                tagsList = tags;
+                            }
+
+                            @Override
+                            public void failure(RestError restError) {
+                                view.showLoadingTagsErrorMessage();
+                            }
+                        });
                     }
 
                     @Override
@@ -121,12 +202,12 @@ public class BmListPresenter extends Presenter<BmListViewInterface, BmListWirefr
                         view.showLoadingErrorMessage();
                         view.showNoContentMessage();
 
-                        update();
+                        updateBookmarkListView();
                     }
                 });
     }
 
-    public void update() {
+    public void updateBookmarkListView() {
         List<Bookmark> bookmarks;
 
         if (null == this.bookmarksList) {

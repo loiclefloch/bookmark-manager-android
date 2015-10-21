@@ -30,4 +30,7 @@
     <string name="filter_by_name">By name</string>
     <string name="filter_by_date">By date</string>
     <string name="sort">sort</string>
+    <string name="search">Search</string>
+    <string name="bookmark_updated">Bookmark updated</string>
+    <string name="edit_tags">Edit tags</string>
 </resources>
